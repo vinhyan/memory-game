@@ -2,8 +2,44 @@ import React from 'react';
 //styles
 import styled from 'styled-components';
 import { OrangeButton, BlueButton } from '../util/GlobalStyles';
+//redux
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  board,
+  sizeOption,
+  selectSizeOption,
+  playerOption,
+  selectPlayerOption,
+  themeOption,
+  selectThemeOption,
+} from '../slice/boardSlice';
 
 const Home = () => {
+  const dispatch = useDispatch();
+
+  const { fourByFour, sixBySix } = useSelector(selectSizeOption);
+  const { one, two, three, four } = useSelector(selectPlayerOption);
+  const { numbers, icons } = useSelector(selectThemeOption);
+
+  const selectTheme = (e) => {
+    let selectedTheme = e.target.innerHTML.toLowerCase();
+    dispatch(themeOption(selectedTheme));
+  };
+
+  const selectPlayer = (e) => {
+    let selectedNumOfPlayer = e.target.value;
+    dispatch(playerOption(selectedNumOfPlayer));
+  };
+
+  const selectBoardSize = (e) => {
+    let selectedSize = e.target.value;
+    let numOfTiles = selectedSize === 'fourByFour' ? 16 : 36;
+    dispatch(sizeOption(selectedSize));
+    dispatch(board(numOfTiles));
+  };
+
+  const startGame = () => {};
+
   return (
     <HomeStyled>
       <h1>memory</h1>
@@ -11,27 +47,55 @@ const Home = () => {
         <OptionContainer>
           <h3>Select Theme</h3>
           <div className="buttons-container">
-            <OptionButton>Numbers</OptionButton>
-            <OptionButton>Icons</OptionButton>
+            <OptionButton $selected={numbers} onClick={selectTheme}>
+              Numbers
+            </OptionButton>
+            <OptionButton $selected={icons} onClick={selectTheme}>
+              Icons
+            </OptionButton>
           </div>
         </OptionContainer>
         <OptionContainer>
           <h3>Numbers of Players</h3>
           <div className="buttons-container">
-            <PlayerButton>1</PlayerButton>
-            <PlayerButton>2</PlayerButton>
-            <PlayerButton>3</PlayerButton>
-            <PlayerButton>4</PlayerButton>
+            <PlayerButton value="one" $selected={one} onClick={selectPlayer}>
+              1
+            </PlayerButton>
+            <PlayerButton value="two" $selected={two} onClick={selectPlayer}>
+              2
+            </PlayerButton>
+            <PlayerButton
+              value="three"
+              $selected={three}
+              onClick={selectPlayer}
+            >
+              3
+            </PlayerButton>
+            <PlayerButton value="four" $selected={four} onClick={selectPlayer}>
+              4
+            </PlayerButton>
           </div>
         </OptionContainer>
         <OptionContainer>
           <h3>Grid Size</h3>
           <div className="buttons-container">
-            <OptionButton>4x4</OptionButton>
-            <OptionButton>6x6</OptionButton>
+            <OptionButton
+              value="fourByFour"
+              $selected={fourByFour}
+              onClick={selectBoardSize}
+            >
+              4x4
+            </OptionButton>
+            <OptionButton
+              value="sixBySix"
+              $selected={sixBySix}
+              onClick={selectBoardSize}
+            >
+              6x6
+            </OptionButton>
           </div>
         </OptionContainer>
-        <StartButton>Start Game</StartButton>
+        <StartButton onClick={startGame}>Start Game</StartButton>
       </ContainerStyled>
     </HomeStyled>
   );
@@ -72,6 +136,11 @@ const OptionContainer = styled.div`
   .buttons-container {
     display: flex;
     justify-content: space-between;
+
+    .selected {
+      background: #304859;
+      color: #fcfcfc;
+    }
   }
 `;
 
@@ -86,12 +155,26 @@ const OptionButton = styled(BlueButton)`
   width: 256px;
   height: 52px;
   font-size: 26px;
+  ${(props) => {
+    if (props.$selected) {
+      return `
+      background: #304859;
+      `;
+    }
+  }}
 `;
 
 const PlayerButton = styled(BlueButton)`
   width: 119px;
   height: 52px;
   font-size: 26px;
+  ${(props) => {
+    if (props.$selected) {
+      return `
+      background: #304859;
+      `;
+    }
+  }}
 `;
 
 export default Home;

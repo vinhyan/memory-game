@@ -2,8 +2,14 @@ import React from 'react';
 //styles
 import styled from 'styled-components';
 import { OrangeButton, BlueButton } from '../util/GlobalStyles';
+//redux
+import { useDispatch, useSelector } from 'react-redux';
+//components
+import Grid from './Grid';
 
 const GameBoard = () => {
+  // const dispatch = useDispatch();
+
   return (
     <GameBoardStyled>
       <div className="header">
@@ -13,7 +19,7 @@ const GameBoard = () => {
           <NewGameButton>New Game</NewGameButton>
         </div>
       </div>
-      <div className="grid"></div>
+      <Grid />
       <div className="footer">
         <div className="stats-container">
           <span>Time</span>
@@ -38,6 +44,13 @@ const GameBoardStyled = styled.div`
     padding-top: 68px;
     display: flex;
     justify-content: space-between;
+  }
+
+  .tile {
+    width: 118px;
+    height: 118px;
+    background: #304859;
+    border-radius: 59px;
   }
 
   .footer {

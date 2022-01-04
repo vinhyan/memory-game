@@ -5,10 +5,11 @@ import GameBoard from './components/GameBoard';
 import GlobalStyles from './util/GlobalStyles';
 
 function App() {
+  
   return (
     <div className="App">
       <GlobalStyles />
-      {/* <Home /> */}
+      <Home />
       <GameBoard />
     </div>
   );
