@@ -8,7 +8,7 @@ for (let i = 0; i < 18; i++) {
 
 const tileData = numArr.map((num, index) => {
   return {
-    tile: num,
+    content: num,
     id: index,
     isFlipped: false,
     isMatched: false,
@@ -56,11 +56,46 @@ const boardSlice = createSlice({
     board: (state, action) => {
       state.board = tileData.slice(0, action.payload);
     },
+    flipTile: (state, action) => {
+      // console.log(action.payload);
+      const selectedTile = state.board[action.payload];
+      selectedTile.isFlipped = true;
+
+      state.board.forEach((tile) => {
+        if (tile.id !== selectedTile.id && tile.isFlipped && !tile.isMatched) {
+          if (tile.content === selectedTile.content) {
+            tile.isMatched = true;
+            selectedTile.isMatched = true;
+          }
+
+          else {
+            tile.isFlipped = false;
+            selectedTile.isFlipped = false;
+          }
+        }
+        
+
+        // if (tile.content === selectedTile.content) {
+        //   tile.isMatched = true;
+        //   selectedTile.isMatched = true;
+        // }
+      });
+
+      // for (let tile in state.board) {
+      //   if (
+      //     state.board[tile].isFlipped &&
+      //     state.board[tile].content === state.board[action.payload].content
+      //   ) {
+      //     state.board[tile].isMatched = true;
+      //     state.board[action.payload].isMatched = true;
+      //   }
+      // }
+    },
   },
 });
 
 //actions
-export const { themeOption, playerOption, sizeOption, board } =
+export const { themeOption, playerOption, sizeOption, board, flipTile } =
   boardSlice.actions;
 
 //select state

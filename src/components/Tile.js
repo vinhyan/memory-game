@@ -1,11 +1,23 @@
 import React from 'react';
 //styles
 import styled from 'styled-components';
+//redux
+import { useDispatch } from 'react-redux';
+import { flipTile } from '../slice/boardSlice';
 
 const Tile = ({ tile }) => {
+  const dispatch = useDispatch();
+
+  const flipTileClick = () => {
+    console.log('yo');
+    dispatch(flipTile(tile.id));
+  };
+
+  const flippedTile = <span>{tile.content}</span>;
+
   return (
-    <TileStyled>
-      <span>{tile.tile}</span>
+    <TileStyled onClick={flipTileClick}>
+      {tile.isFlipped || tile.isMatched ? flippedTile : ''}
     </TileStyled>
   );
 };
@@ -13,7 +25,7 @@ const Tile = ({ tile }) => {
 const TileStyled = styled.div`
   width: 118px;
   height: 118px;
-  background: #bcced9;
+  background: #304859;
   border-radius: 59px;
   display: flex;
   justify-content: center;

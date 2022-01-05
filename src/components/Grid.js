@@ -9,6 +9,7 @@ import styled from 'styled-components';
 
 const Grid = () => {
   const board = useSelector(selectBoard);
+  console.log(board);
   return (
     <GridStyled>
       {board.map((tile) => (
