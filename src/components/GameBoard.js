@@ -4,18 +4,23 @@ import styled from 'styled-components';
 import { OrangeButton, BlueButton } from '../util/GlobalStyles';
 //redux
 import { useDispatch, useSelector } from 'react-redux';
+import { restartGame } from '../slice/boardSlice';
 //components
 import Grid from './Grid';
 
 const GameBoard = () => {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
+
+  const restartGameHandler = () => {
+    dispatch(restartGame());
+  };
 
   return (
     <GameBoardStyled>
       <div className="header">
         <h2>memory</h2>
         <div className="buttons-container">
-          <RestartButton>Restart</RestartButton>
+          <RestartButton onClick={restartGameHandler}>Restart</RestartButton>
           <NewGameButton>New Game</NewGameButton>
         </div>
       </div>

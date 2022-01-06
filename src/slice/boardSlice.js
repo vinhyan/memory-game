@@ -57,51 +57,71 @@ const boardSlice = createSlice({
       state.board = tileData.slice(0, action.payload);
     },
     flipTile: (state, action) => {
-      // console.log(action.payload);
       const selectedTile = state.board[action.payload];
       selectedTile.isFlipped = true;
 
-      state.board.forEach((tile) => {
-        if (tile.id !== selectedTile.id && tile.isFlipped && !tile.isMatched) {
-          if (tile.content === selectedTile.content) {
-            tile.isMatched = true;
-            selectedTile.isMatched = true;
-          }
+      //filter out the flipped tiles, get their IDs and store in index1 and index 2:
+      const [index1, index2] = state.board
+        .filter((tile) => tile.isFlipped)
+        .map((tile) => tile.id);
 
-          else {
-            tile.isFlipped = false;
-            selectedTile.isFlipped = false;
-          }
+      console.log(index1, index2);
+
+      if (index2 !== undefined) {
+        const tile1 = state.board[index1];
+        const tile2 = state.board[index2];
+
+        if (tile1.content === tile2.content) {
+          state.board[index1] = {
+            ...tile1,
+            isFlipped: false, //set isFlipped to false so the filter() above won't filter out the matched pairs
+            isMatched: true,
+          };
+          state.board[index2] = {
+            ...tile2,
+            isFlipped: false,
+            isMatched: true,
+          };
         }
-        
-
-        // if (tile.content === selectedTile.content) {
-        //   tile.isMatched = true;
-        //   selectedTile.isMatched = true;
-        // }
+      }
+    },
+    resetTile: (state) => {
+      state.board.map((tile) => (tile.isFlipped = false));
+    },
+    restartGame: (state) => {
+      console.log('1');
+      state.board.map((tile, index) => {
+        return (tile = {
+          ...state.board[index],
+          isFlipped: false,
+          isMatched: false,
+        });
       });
-
-      // for (let tile in state.board) {
-      //   if (
-      //     state.board[tile].isFlipped &&
-      //     state.board[tile].content === state.board[action.payload].content
-      //   ) {
-      //     state.board[tile].isMatched = true;
-      //     state.board[action.payload].isMatched = true;
-      //   }
-      // }
     },
   },
 });
 
 //actions
-export const { themeOption, playerOption, sizeOption, board, flipTile } =
-  boardSlice.actions;
+export const {
+  themeOption,
+  playerOption,
+  sizeOption,
+  board,
+  flipTile,
+  resetTile,
+  restartGame,
+} = boardSlice.actions;
 
 //select state
 export const selectSizeOption = (state) => state.boardGame.sizeOption;
 export const selectPlayerOption = (state) => state.boardGame.playerOption;
 export const selectThemeOption = (state) => state.boardGame.themeOption;
 export const selectBoard = (state) => state.boardGame.board;
+
+export const selectFlippedTilesID = (state) =>
+  state.boardGame.board.filter((tile) => tile.isFlipped).map((tile) => tile.id);
+
+export const selectMatchedTilesID = (state) =>
+  state.boardGame.board.filter((tile) => tile.isMatched).map((tile) => tile.id);
 
 export default boardSlice.reducer;

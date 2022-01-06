@@ -2,24 +2,38 @@ import React from 'react';
 //styles
 import styled from 'styled-components';
 //redux
-import { useDispatch } from 'react-redux';
-import { flipTile } from '../slice/boardSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  flipTile,
+  selectMatchedTilesID,
+  selectFlippedTilesID,
+  resetTile,
+} from '../slice/boardSlice';
 
 const Tile = ({ tile }) => {
   const dispatch = useDispatch();
+  const matchedTilesID = useSelector(selectMatchedTilesID);
+  const flippedTilesID = useSelector(selectFlippedTilesID);
 
-  const flipTileClick = () => {
-    console.log('yo');
+  let tileContent = '';
+
+  let flipTileClick = () => {
+    // dispatch(resetTile());
     dispatch(flipTile(tile.id));
   };
 
-  const flippedTile = <span>{tile.content}</span>;
+  if (flippedTilesID.includes(tile.id) || matchedTilesID.includes(tile.id)) {
+    tileContent = tile.content;
+    flipTileClick = () => {};
+  }
 
-  return (
-    <TileStyled onClick={flipTileClick}>
-      {tile.isFlipped || tile.isMatched ? flippedTile : ''}
-    </TileStyled>
-  );
+  if (flippedTilesID.length === 2 && !matchedTilesID.includes(tile.id)) {
+    flipTileClick = () => {
+      dispatch(resetTile());
+    };
+  }
+
+  return <TileStyled onClick={flipTileClick}>{tileContent}</TileStyled>;
 };
 
 const TileStyled = styled.div`
