@@ -4,15 +4,16 @@ import styled from 'styled-components';
 import { OrangeButton, BlueButton } from '../util/GlobalStyles';
 //redux
 import { useDispatch, useSelector } from 'react-redux';
-import { restartGame } from '../slice/boardSlice';
+import { board, selectSizeOption } from '../slice/boardSlice';
 //components
 import Grid from './Grid';
 
 const GameBoard = () => {
   const dispatch = useDispatch();
+  const gameSize = Number(useSelector(selectSizeOption));
 
   const restartGameHandler = () => {
-    dispatch(restartGame());
+    dispatch(board(gameSize));
   };
 
   return (

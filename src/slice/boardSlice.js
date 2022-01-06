@@ -28,10 +28,11 @@ const boardSlice = createSlice({
       three: false,
       four: false,
     },
-    sizeOption: {
-      fourByFour: false,
-      sixBySix: false,
-    },
+    // sizeOption: {
+    //   fourByFour: false,
+    //   sixBySix: false,
+    // },
+    sizeOption: '',
     board: [],
   },
   reducers: {
@@ -48,10 +49,11 @@ const boardSlice = createSlice({
       state.playerOption[action.payload] = true;
     },
     sizeOption: (state, action) => {
-      for (let size in state.sizeOption) {
-        state.sizeOption[size] = false;
-      }
-      state.sizeOption[action.payload] = true;
+      state.sizeOption = action.payload;
+      // for (let size in state.sizeOption) {
+      //   state.sizeOption[size] = false;
+      // }
+      // state.sizeOption[action.payload] = true;
     },
     board: (state, action) => {
       state.board = tileData.slice(0, action.payload);
@@ -87,16 +89,6 @@ const boardSlice = createSlice({
     },
     resetTile: (state) => {
       state.board.map((tile) => (tile.isFlipped = false));
-    },
-    restartGame: (state) => {
-      console.log('1');
-      state.board.map((tile, index) => {
-        return (tile = {
-          ...state.board[index],
-          isFlipped: false,
-          isMatched: false,
-        });
-      });
     },
   },
 });

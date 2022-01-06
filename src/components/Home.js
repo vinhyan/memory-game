@@ -17,7 +17,7 @@ import {
 const Home = () => {
   const dispatch = useDispatch();
 
-  const { fourByFour, sixBySix } = useSelector(selectSizeOption);
+  const gameSize = Number(useSelector(selectSizeOption));
   const { one, two, three, four } = useSelector(selectPlayerOption);
   const { numbers, icons } = useSelector(selectThemeOption);
 
@@ -32,13 +32,18 @@ const Home = () => {
   };
 
   const selectBoardSize = (e) => {
-    let selectedSize = e.target.value;
-    let numOfTiles = selectedSize === 'fourByFour' ? 16 : 36;
+    // let selectedSize = e.target.value;
+    // dispatch(sizeOption(selectedSize));
+    let selectedSize = e.target.innerHTML === '4x4' ? 16 : 36;
     dispatch(sizeOption(selectedSize));
-    dispatch(board(numOfTiles));
   };
 
-  const startGame = () => {};
+  const startGame = () => {
+    // let size;
+    // if (fourByFour) size = 16;
+    // if (sixBySix) size = 36;
+    dispatch(board(gameSize));
+  };
 
   return (
     <HomeStyled>
@@ -81,14 +86,14 @@ const Home = () => {
           <div className="buttons-container">
             <OptionButton
               value="fourByFour"
-              $selected={fourByFour}
+              $selected={gameSize === 16 ? true : false}
               onClick={selectBoardSize}
             >
               4x4
             </OptionButton>
             <OptionButton
               value="sixBySix"
-              $selected={sixBySix}
+              $selected={gameSize === 36 ? true : false}
               onClick={selectBoardSize}
             >
               6x6
