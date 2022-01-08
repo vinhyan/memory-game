@@ -52,12 +52,12 @@ const GameBoardStyled = styled.div`
     justify-content: space-between;
   }
 
-  .tile {
+  /* .tile {
     width: 118px;
     height: 118px;
     background: #304859;
     border-radius: 59px;
-  }
+  } */
 
   .footer {
     display: flex;

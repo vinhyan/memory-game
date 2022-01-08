@@ -1,19 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-
-let numArr = [];
-for (let i = 0; i < 18; i++) {
-  numArr.push(i);
-  numArr.push(i);
-}
-
-const tileData = numArr.map((num, index) => {
-  return {
-    content: num,
-    id: index,
-    isFlipped: false,
-    isMatched: false,
-  };
-});
+//util
+import { shuffle, tileData } from '../util/util';
 
 const boardSlice = createSlice({
   name: 'board',
@@ -28,10 +15,6 @@ const boardSlice = createSlice({
       three: false,
       four: false,
     },
-    // sizeOption: {
-    //   fourByFour: false,
-    //   sixBySix: false,
-    // },
     sizeOption: '',
     board: [],
   },
@@ -50,24 +33,19 @@ const boardSlice = createSlice({
     },
     sizeOption: (state, action) => {
       state.sizeOption = action.payload;
-      // for (let size in state.sizeOption) {
-      //   state.sizeOption[size] = false;
-      // }
-      // state.sizeOption[action.payload] = true;
     },
     board: (state, action) => {
-      state.board = tileData.slice(0, action.payload);
+      const newTileData = tileData.slice(0, action.payload);
+      state.board = shuffle(newTileData);
     },
     flipTile: (state, action) => {
       const selectedTile = state.board[action.payload];
       selectedTile.isFlipped = true;
 
-      //filter out the flipped tiles, get their IDs and store in index1 and index 2:
+      //filter out the tiles being flipped, get their IDs and store in index1 and index 2:
       const [index1, index2] = state.board
         .filter((tile) => tile.isFlipped)
         .map((tile) => tile.id);
-
-      console.log(index1, index2);
 
       if (index2 !== undefined) {
         const tile1 = state.board[index1];
@@ -76,12 +54,12 @@ const boardSlice = createSlice({
         if (tile1.content === tile2.content) {
           state.board[index1] = {
             ...tile1,
-            isFlipped: false, //set isFlipped to false so the filter() above won't filter out the matched pairs
+            isFlipped: true, //keep this to true and will only switch to false once click on the next tile - dispatch resetTile to set flipped tiles but not matched to false => this is to help with the current unflipped tiles' style
             isMatched: true,
           };
           state.board[index2] = {
             ...tile2,
-            isFlipped: false,
+            isFlipped: true,
             isMatched: true,
           };
         }

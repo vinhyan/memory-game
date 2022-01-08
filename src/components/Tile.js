@@ -10,44 +10,81 @@ import {
   resetTile,
 } from '../slice/boardSlice';
 
-const Tile = ({ tile }) => {
+const Tile = ({ tile, id }) => {
   const dispatch = useDispatch();
   const matchedTilesID = useSelector(selectMatchedTilesID);
   const flippedTilesID = useSelector(selectFlippedTilesID);
 
   let tileContent = '';
+  let tileStyle = '';
 
   let flipTileClick = () => {
-    // dispatch(resetTile());
-    dispatch(flipTile(tile.id));
+    dispatch(flipTile(id));
   };
 
-  if (flippedTilesID.includes(tile.id) || matchedTilesID.includes(tile.id)) {
+  if (flippedTilesID.includes(id) || matchedTilesID.includes(id)) {
     tileContent = tile.content;
     flipTileClick = () => {};
   }
 
-  if (flippedTilesID.length === 2 && !matchedTilesID.includes(tile.id)) {
+  if (flippedTilesID.includes(id)) {
+    tileStyle = 'flipped';
+  }
+
+  if (!flippedTilesID.includes(id) && matchedTilesID.includes(id)) {
+    tileStyle = 'matched';
+  }
+
+  if (flippedTilesID.length === 2 && !matchedTilesID.includes(id)) {
     flipTileClick = () => {
       dispatch(resetTile());
+      dispatch(flipTile(id));
     };
   }
 
-  return <TileStyled onClick={flipTileClick}>{tileContent}</TileStyled>;
+  return (
+    <TileContainer onClick={flipTileClick} $tileStyle={tileStyle}>
+      {tileContent}
+    </TileContainer>
+  );
 };
 
-const TileStyled = styled.div`
+const TileContainer = styled.div`
   width: 118px;
   height: 118px;
-  background: #304859;
   border-radius: 59px;
+  cursor: pointer;
+
+  ${(props) => {
+    if (props.$tileStyle === 'flipped') {
+      return `
+            background: orange;
+            `;
+    } else if (props.$tileStyle === 'matched') {
+      return `
+            background: #BCCED9;
+            `;
+    } else {
+      return `
+            background: #304859;
+            `;
+    }
+  }}
+
   display: flex;
   justify-content: center;
   align-items: center;
   color: #f2f2f2;
   font-size: 56px;
   font-weight: bold;
-  cursor: pointer;
+
+  .flipped {
+    background: #fda214;
+  }
+
+  .matched {
+    background: pink;
+  }
 `;
 
 export default Tile;

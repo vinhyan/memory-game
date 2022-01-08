@@ -2,6 +2,7 @@ import React from 'react';
 //redux
 import { useDispatch, useSelector } from 'react-redux';
 import { selectBoard } from '../slice/boardSlice';
+
 //components
 import Tile from './Tile';
 //styles
@@ -9,11 +10,10 @@ import styled from 'styled-components';
 
 const Grid = () => {
   const board = useSelector(selectBoard);
-  //   console.log(board);
   return (
     <GridStyled>
       {board.map((tile) => (
-        <Tile tile={tile} key={tile.id} />
+        <Tile tile={tile} key={tile.id} id={tile.id} />
       ))}
     </GridStyled>
   );
